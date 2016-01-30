@@ -5,6 +5,30 @@
 using namespace std;
 
 
+bool AnalyseParameter(int argc, char* argv[], string param)
+{
+	for (int i = 1; i < argc; i++)
+	{
+		if (argv[i] == "/" + param || argv[i] == "-" + param)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool AnalyseFile(char* filename)
+{
+	string exp = filename;
+	if (exp.substr(exp.find_first_of(".") + 1) == "cpp")
+	{
+		return true;
+	}
+	return false;
+}
+
+
+
 int main(int argc, char* argv[])
 {
 	if (argc > 1)
@@ -28,28 +52,4 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
-
-bool AnalyseParameter(int argc,char* argv[], string param)
-{
-	for (int i = 1; i < argc; i++)
-	{
-		if (argv[i] == "/"+param || argv[i] == "-"+param)
-		{
-			return true;
-		}	
-	}
-	return false;
-}
-
-bool AnalyseFile(char* filename)
-{	
-	string exp = filename;
-	if (exp.substr(exp.find_first_of(".") + 1) == "cpp")
-	{
-		return true;
-	}
-	return false;
-}
-
-
 	
