@@ -35,8 +35,10 @@ bool FindFichier(it param, const T &pred)
 		return false;
 }
 
-void convertirHtml(bool couleur, bool stat, ifstream& file, map<string, int> htmlMap, string filename)
+void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string filename)
 {
+	ifstream file(filename);
+
 	//Creation du fichier Stats
 	if (stat)
 	{
@@ -66,6 +68,108 @@ void convertirHtml(bool couleur, bool stat, ifstream& file, map<string, int> htm
 	if (couleur)
 	{
 		myHtmlFile << filename << " +couleur" << endl;
+		ifstream in(filename);
+		vector<string> FileTemp;
+		for (string s; in >> s;)
+			FileTemp.push_back(s);
+
+	
+
+		vector<string> listCPP = {
+			"alignas"
+			,"alignof"
+			,"and"
+			,"and_eq"
+			,"asm"
+			,"auto"
+			,"bitand"
+			,"bitor"
+			,"bool"
+			,"break"
+			,"case"
+			,"catch"
+			,"char"
+			,"class"
+			,"compl"
+			,"const"
+			,"constexpr"
+			,"const_cast"
+			,"continue"
+			,"decltype"
+			,"default"
+			,"delete"
+			,"do"
+			,"double"
+			,"dynamic_cast"
+			,"else"
+			,"enum"
+			,"explicit"
+			,"export"
+			,"extern"
+			,"false"
+			,"float"
+			,"for"
+			,"friend"
+			,"goto"
+			,"if"
+			,"inline"
+			,"int"
+			,"long"
+			,"mutable"
+			,"namespace"
+			,"new"
+			,"noexcept"
+			,"not"
+			,"not_eq"
+			,"nullptr"
+			,"operator"
+			,"or"
+			,"or_eq"
+			,"private"
+			,"protected"
+			,"public"
+			,"register"
+			,"reinterpret_cast"
+			,"return"
+			,"short"
+			,"signed"
+			,"sizeof"
+			,"static"
+			,"static_assert"
+			,"static_cast"
+			,"struct"
+			,"switch"
+			,"template"
+			,"this"
+			,"thread_local"
+			,"throw"
+			,"true"
+			,"try"
+			,"typedef"
+			,"typeid"
+			,"typename"
+			,"union"
+			,"unsigned"
+			,"using"
+			,"virtual"
+			,"void"
+			,"volatile"
+			,"wchar_t"
+			,"while"
+			,"xor"
+			,"xor_eq" };
+
+
+		for (vector<string>::iterator begin = listCPP.begin(); begin != listCPP.end(); ++begin)
+		{
+			for (vector<string>::iterator pos; pos != FileTemp.end();)
+			{
+				pos = find(FileTemp.begin(), FileTemp.end(), *begin);
+				string stringTemp = *pos;
+				transform(stringTemp.begin(), stringTemp.end(), stringTemp.begin(), [](unsigned char c) {return	toupper(c); });				
+				FileTemp.erase(pos);
+			}
+		}
 	}
 	else
 	{
@@ -93,89 +197,8 @@ void convertirHtml(bool couleur, bool stat, ifstream& file, map<string, int> htm
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
-	vector<string> listCPP = {
-		"alignas"
-		,"alignof"
-		,"and"
-		,"and_eq"
-		,"asm"
-		,"auto"
-		,"bitand"
-		,"bitor"
-		,"bool"
-		,"break"
-		,"case"
-		,"catch"
-		,"char"
-		,"class"
-		,"compl"
-		,"const"
-		,"constexpr"
-		,"const_cast"
-		,"continue"
-		,"decltype"
-		,"default"
-		,"delete"
-		,"do"
-		,"double"
-		,"dynamic_cast"
-		,"else"
-		,"enum"
-		,"explicit"
-		,"export"
-		,"extern"
-		,"false"
-		,"float"
-		,"for"
-		,"friend"
-		,"goto"
-		,"if"
-		,"inline"
-		,"int"
-		,"long"
-		,"mutable"
-		,"namespace"
-		,"new"
-		,"noexcept"
-		,"not"
-		,"not_eq"
-		,"nullptr"
-		,"operator"
-		,"or"
-		,"or_eq"
-		,"private"
-		,"protected"
-		,"public"
-		,"register"
-		,"reinterpret_cast"
-		,"return"
-		,"short"
-		,"signed"
-		,"sizeof"
-		,"static"
-		,"static_assert"
-		,"static_cast"
-		,"struct"
-		,"switch"
-		,"template"
-		,"this"
-		,"thread_local"
-		,"throw"
-		,"true"
-		,"try"
-		,"typedef"
-		,"typeid"
-		,"typename"
-		,"union"
-		,"unsigned"
-		,"using"
-		,"virtual"
-		,"void"
-		,"volatile"
-		,"wchar_t"
-		,"while"
-		,"xor"
-		,"xor_eq" };
+	arguments.push_back("test.cpp");
+	arguments.push_back("-couleur");
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
@@ -196,9 +219,9 @@ int main(int argc, char* argv[])
 			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
 				filename = *it;
-				ifstream in(filename);
-				convertirHtml(couleur, stat, in, htmlMap, filename);
-				in.close();
+				
+				convertirHtml(couleur, stat, htmlMap, filename);
+				
 			}
 		}
 	}
