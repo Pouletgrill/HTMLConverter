@@ -48,7 +48,7 @@ void convertirHtml(bool couleur,bool stat,ifstream& file, map<string, int> htmlM
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
-	string listHtml[] = {
+	/*string listHtml[] = {
 		"<!DOCTYPE>","<a>",
 		"<abbr>","<acronym>",
 		"<address>","<applet>",
@@ -109,8 +109,92 @@ int main(int argc, char* argv[])
 		"<track>","<tt>",
 		"<u>","<ul>",
 		"<var>","<video>",
-		"<wbr>" };
-				
+		"<wbr>" };*/
+	string listCPP[] = {
+		"alignas"
+		,"alignof"
+		,"and"
+		,"and_eq"
+		,"asm"
+		,"auto"
+		,"bitand"
+		,"bitor"
+		,"bool"
+		,"break"
+		,"case"
+		,"catch"
+		,"char"
+		,"class"
+		,"compl"
+		,"const"
+		,"constexpr"
+		,"const_cast"
+		,"continue"
+		,"decltype"
+		,"default"
+		,"delete"
+		,"do"
+		,"double"
+		,"dynamic_cast"
+		,"else"
+		,"enum"
+		,"explicit"
+		,"export"
+		,"extern"
+		,"false"
+		,"float"
+		,"for"
+		,"friend"
+		,"goto"
+		,"if"
+		,"inline"
+		,"int"
+		,"long"
+		,"mutable"
+		,"namespace"
+		,"new"
+		,"noexcept"
+		,"not"
+		,"not_eq"
+		,"nullptr"
+		,"operator"
+		,"or"
+		,"or_eq"
+		,"private"
+		,"protected"
+		,"public"
+		,"register"
+		,"reinterpret_cast"
+		,"return"
+		,"short"
+		,"signed"
+		,"sizeof"
+		,"static"
+		,"static_assert"
+		,"static_cast"
+		,"struct"
+		,"switch"
+		,"template"
+		,"this"
+		,"thread_local"
+		,"throw"
+		,"true"
+		,"try"
+		,"typedef"
+		,"typeid"
+		,"typename"
+		,"union"
+		,"unsigned"
+		,"using"
+		,"virtual"
+		,"void"
+		,"volatile"
+		,"wchar_t"
+		,"while"
+		,"xor"
+		,"xor_eq"
+	};
+
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
 	if (!arguments.empty())
