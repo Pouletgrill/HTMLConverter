@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
+#include <algorithm>
 using namespace std;
 
 
@@ -42,13 +43,15 @@ void convertirHtml(bool couleur,bool stat,ifstream& file, map<string, int> htmlM
 
 	for (auto &p : htmlMap)
 		cout << p.first << "/" << p.second << endl;
+
+	cout << s;
 }
 
 
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
-	string listCPP[] = {
+	vector<string> listCPP = {
 		"alignas"
 		,"alignof"
 		,"and"
@@ -130,8 +133,7 @@ int main(int argc, char* argv[])
 		,"wchar_t"
 		,"while"
 		,"xor"
-		,"xor_eq"
-	};
+		,"xor_eq"};
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
@@ -148,12 +150,13 @@ int main(int argc, char* argv[])
 		vector<string>::iterator it = begin(arguments);
 		for (string filename;it!=end(arguments);it++)
 		{		   
-			if (FindFichier(it, [](string param) {return param.substr(param.find_last_of(".") + 1) == "cpp"; }))
+			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
+			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
 				filename = *it;	
 				ifstream in(filename);
 				convertirHtml(couleur,stat,in,htmlMap);
-			}			
+			}
 		}	
 	}
 	else
