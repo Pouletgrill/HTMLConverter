@@ -16,7 +16,7 @@ bool FileExist(string filename)
 }
 
 template<class it, class T>
-bool AnalyseParameter(it debut,it end, const T &pred)
+bool AnalyseParameter(it debut, it end, const T &pred)
 {
 	for (; debut != end; ++debut)
 	{
@@ -35,16 +35,58 @@ bool FindFichier(it param, const T &pred)
 		return false;
 }
 
-void convertirHtml(bool couleur,bool stat,ifstream& file, map<string, int> htmlMap)
+void convertirHtml(bool couleur, bool stat, ifstream& file, map<string, int> htmlMap, string filename)
 {
-	//build map
-	for (string s; file >> s;)
-		htmlMap[s]++;
+	//Creation du fichier Stats
+	if (stat)
+	{
+		ofstream myfile;
+		myfile.open("Stats.txt");
+		//build map
+		for (string s; file >> s;)
+			htmlMap[s]++;
 
-	for (auto &p : htmlMap)
-		cout << p.first << "/" << p.second << endl;
+		for (auto &p : htmlMap)
+			myfile << p.first << " / " << p.second << endl;
+		myfile.close();
+	}
 
-	cout << s;
+	ofstream myHtmlFile;
+	myHtmlFile.open(filename + ".html");//Création du fichier
+										//Header
+	myHtmlFile << "<html><head>" << endl <<
+		"<head>" << endl <<
+		"<title>" << filename << "</title>" << endl <<
+		"<meta charset = 'UTF-8'>" << endl <<
+		"<link rel = 'stylesheet' type = 'text/css' href = 'Style.css'>" << endl <<
+		"</head>" << endl <<
+		"<body>" << endl;
+
+	//Contenue
+	if (couleur)
+	{
+		myHtmlFile << filename << " +couleur" << endl;
+	}
+	else
+	{
+		myHtmlFile << filename << endl;
+		ifstream doc(filename);
+		if(doc.is_open())
+			for (string line=""; getline(doc, line);)
+			{
+				myHtmlFile << line << "<br/>"<<endl;
+			}
+		else
+		{
+			cout << " problemo " << endl;
+		}
+		doc.close();
+	}	
+
+
+	//footer
+	myHtmlFile << "</body></html>" << endl;
+	myHtmlFile.close();
 }
 
 
@@ -133,31 +175,32 @@ int main(int argc, char* argv[])
 		,"wchar_t"
 		,"while"
 		,"xor"
-		,"xor_eq"};
+		,"xor_eq" };
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
 	if (!arguments.empty())
-	{	
+	{
 		//Check les paramètres
 		bool couleur = AnalyseParameter(begin(arguments), end(arguments), [](string param) {return param == "/couleur" || param == "-couleur"; });
 		bool stat = AnalyseParameter(begin(arguments), end(arguments), [](string param) {return param == "/stat" || param == "-stat"; });
-		
+
 		//la map html
 		map<string, int> htmlMap;
 
 		//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 		vector<string>::iterator it = begin(arguments);
-		for (string filename;it!=end(arguments);it++)
-		{		   
+		for (string filename; it != end(arguments); it++)
+		{
 			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
-				filename = *it;	
+				filename = *it;
 				ifstream in(filename);
-				convertirHtml(couleur,stat,in,htmlMap);
+				convertirHtml(couleur, stat, in, htmlMap, filename);
+				in.close();
 			}
-		}	
+		}
 	}
 	else
 	{
@@ -165,4 +208,3 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
-	
