@@ -1,3 +1,17 @@
+alignas
+alignof
+and
+and_eq
+asm
+auto
+bitand
+bitor
+bool
+,"break"
+if (lol==1)
+{
+	new chat();
+}
 fafafafa
 dasdasda
 ffafafaafaf
@@ -7,7 +21,3 @@ dasss
 fagrgwrg
 sdfadefqe
 dad
-if(lol==1)
-{
-	new chat();
-}

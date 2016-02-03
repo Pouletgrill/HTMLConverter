@@ -5,6 +5,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include <regex>
 using namespace std;
 
 
@@ -34,6 +35,7 @@ bool FindFichier(it param, const T &pred)
 	else
 		return false;
 }
+
 
 void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string filename)
 {
@@ -67,12 +69,12 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 	//Contenue
 	if (couleur)
 	{
-		myHtmlFile << filename << " +couleur" << endl;
+		myHtmlFile << filename << " + couleur" << "<br>";
 		ifstream in(filename);
+		
 		vector<string> FileTemp;
-		for (string s; in >> s;)
+		for (string s; getline(in, s);)
 			FileTemp.push_back(s);
-
 	
 
 		vector<string> listCPP = {
@@ -159,16 +161,21 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 			,"xor"
 			,"xor_eq" };
 
-
-		for (vector<string>::iterator begin = listCPP.begin(); begin != listCPP.end(); ++begin)
+		regex expression1;
+		regex expression2;
+		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
 		{
-			for (vector<string>::iterator pos; pos != FileTemp.end();)
+			for (vector<string>::iterator keywordPos = listCPP.begin(); keywordPos != listCPP.end(); ++keywordPos)
 			{
-				pos = find(FileTemp.begin(), FileTemp.end(), *begin);
-				string stringTemp = *pos;
-				transform(stringTemp.begin(), stringTemp.end(), stringTemp.begin(), [](unsigned char c) {return	toupper(c); });				
-				FileTemp.erase(pos);
+				expression1 = "\\b" + *keywordPos + "\\b";
+				expression2 = "^ ((? !class=).)*$";
+				if (!regex_match(*begin, expression2))
+				{
+					*begin = regex_replace(*begin, expression1, "<span class='" + *keywordPos + "'>" + *keywordPos + "</span>");
+				}
+				
 			}
+			myHtmlFile << *begin << "<br>" << flush;
 		}
 	}
 	else
@@ -194,11 +201,15 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 }
 
 
+
+
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
-	arguments.push_back("test.cpp");
-	arguments.push_back("-couleur");
+	arguments.push_back("-couleur");	
+	arguments.push_back("fuck.cpp");
+
+	
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
