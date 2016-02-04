@@ -12,8 +12,7 @@ using namespace std;
 
 bool FileExist(string filename)
 {
-	ifstream infile(filename);
-	return infile.good();
+	return ifstream{ filename }.good();
 }
 
 template<class it, class T>
@@ -30,30 +29,12 @@ bool AnalyseParameter(it debut, it end, const T &pred)
 template<class it, class T>
 bool FindFichier(it param, const T &pred)
 {
-	if (pred(*param) && FileExist(*param))
-		return true;
-	else
-		return false;
+	return pred(*param) && FileExist(*param);
 }
-
 
 void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string filename)
 {
 	ifstream file(filename);
-
-	//Creation du fichier Stats
-	if (stat)
-	{
-		ofstream myfile;
-		myfile.open("Stats.txt");
-		//build map
-		for (string s; file >> s;)
-			htmlMap[s]++;
-
-		for (auto &p : htmlMap)
-			myfile << p.first << " / " << p.second << endl;
-		myfile.close();
-	}
 
 	ofstream myHtmlFile;
 	myHtmlFile.open(filename + ".html");//Création du fichier
@@ -64,8 +45,34 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 		"<meta charset = 'UTF-8'>" << endl <<
 		"<link rel = 'stylesheet' type = 'text/css' href = 'Style.css'>" << endl <<
 		"</head>" << endl <<
-		"<body>" << endl;
+		"<body>" << endl <<
+		"<pre>" << endl;
 
+	
+
+	//Creation du fichier Stats
+	if (stat)
+	{
+		ofstream myfile;
+		myfile.open("Stats.txt");
+		//build map
+		for (string s; file >> s;)
+			htmlMap[s]++;
+		
+		regex bitch{ "\\w+" };
+		regex bitch2{ "\\d+\\.*\\d*\\w*" };
+		
+		for (auto &p : htmlMap)
+		{
+			if(regex_match(p.first,bitch) || regex_match(p.first, bitch2))
+			{
+				myfile << p.first << " / " << p.second << endl;
+			}			
+		}			
+		myfile.close();
+	}
+	
+		
 	//Contenue
 	if (couleur)
 	{
@@ -75,7 +82,6 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 		vector<string> FileTemp;
 		for (string s; getline(in, s);)
 			FileTemp.push_back(s);
-	
 
 		vector<string> listCPP = {
 			"alignas"
@@ -161,42 +167,41 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 			,"xor"
 			,"xor_eq" };
 
-		regex expression1;
-		regex expression2;
+		regex expression1;	
+
+
 		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
 		{
+			*begin = regex_replace(*begin, regex{ "&" }, "&amp;");
+			*begin = regex_replace(*begin, regex{ "<" }, "&lt;");
+			*begin = regex_replace(*begin, regex{ ">" }, "&gt;");
+			
 			for (vector<string>::iterator keywordPos = listCPP.begin(); keywordPos != listCPP.end(); ++keywordPos)
 			{
-				expression1 = "\\b" + *keywordPos + "\\b";
-				expression2 = "^ ((? !class=).)*$";
-				if (!regex_match(*begin, expression2))
-				{
-					*begin = regex_replace(*begin, expression1, "<span class='" + *keywordPos + "'>" + *keywordPos + "</span>");
-				}
+				 expression1 = "\\b" + *keywordPos + "\\b";
 				
+				*begin = regex_replace(*begin, expression1, "<span style='color:blue'>" + *keywordPos + "</span>");				
 			}
 			myHtmlFile << *begin << "<br>" << flush;
 		}
 	}
 	else
 	{
-		myHtmlFile << filename << endl;
-		ifstream doc(filename);
-		if(doc.is_open())
-			for (string line=""; getline(doc, line);)
-			{
-				myHtmlFile << line << "<br/>"<<endl;
-			}
-		else
+		ifstream in(filename);
+		vector<string> FileTemp;
+		for (string s; getline(in, s);)
+			FileTemp.push_back(s);
+
+		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
 		{
-			cout << " problemo " << endl;
+			*begin = regex_replace(*begin, regex{ "&" }, "&amp;");
+			*begin = regex_replace(*begin, regex{ "<" }, "&lt;");
+			*begin = regex_replace(*begin, regex{ ">" }, "&gt;");
+		   	myHtmlFile << *begin << "<br>" << flush;
 		}
-		doc.close();
 	}	
-
-
 	//footer
-	myHtmlFile << "</body></html>" << endl;
+	myHtmlFile << "</pre></body></html>" << endl;
 	myHtmlFile.close();
 }
 
@@ -206,7 +211,7 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
-	arguments.push_back("-couleur");	
+	arguments.push_back("-stat");	
 	arguments.push_back("fuck.cpp");
 
 	
@@ -229,10 +234,8 @@ int main(int argc, char* argv[])
 			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
-				filename = *it;
-				
-				convertirHtml(couleur, stat, htmlMap, filename);
-				
+				filename = *it;				
+				convertirHtml(couleur, stat, htmlMap, filename);				
 			}
 		}
 	}
