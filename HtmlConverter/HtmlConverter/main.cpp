@@ -218,6 +218,7 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
+	//Forcer des arguments ICI
 	//arguments.push_back("-stat");
 	//arguments.push_back("-couleur");
 	//arguments.push_back("fuck.cpp");
@@ -229,8 +230,12 @@ int main(int argc, char* argv[])
 	if (!arguments.empty())
 	{
 		//Check les paramètres
-		bool couleur = AnalyseParameter(begin(arguments), end(arguments), [](string param) {return param == "/couleur" || param == "-couleur"; });
-		bool stat = AnalyseParameter(begin(arguments), end(arguments), [](string param) {return param == "/stat" || param == "-stat"; });
+		bool couleur = AnalyseParameter(begin(arguments),
+			end(arguments),
+			[](string param) {return param == "/couleur" || param == "-couleur"; });
+		bool stat = AnalyseParameter(begin(arguments),
+			end(arguments),
+			[](string param) {return param == "/stat" || param == "-stat"; });
 
 		//la map html
 		map<string, int> htmlMap;
