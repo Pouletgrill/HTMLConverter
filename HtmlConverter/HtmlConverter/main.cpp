@@ -153,6 +153,7 @@ int main(int argc, char* argv[])
 {
 	vector<string> arguments(argv, argv + argc);
 	//Forcer des arguments ICI
+	//-------------------------
 	//arguments.push_back("-stat");
 	//arguments.push_back("-couleur");
 	//arguments.push_back("fuck.cpp");
