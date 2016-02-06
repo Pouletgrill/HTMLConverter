@@ -36,6 +36,12 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 {
 	ifstream file;
 
+	file.open(filename);
+	vector<string> FileTemp;
+	for (string s; getline(file, s);)
+		FileTemp.push_back(s);
+	file.close();
+
 	ofstream myHtmlFile;
 	myHtmlFile.open(filename + ".html");//Création du fichier
 										//Header
@@ -48,142 +54,74 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 		"<body>" << endl <<
 		"<pre>" << endl;
 
-	
+
 
 	//Creation du fichier Stats
 	if (stat)
 	{
 		file.open(filename);
 		ofstream myfile;
-		myfile.open("Stats.txt");
+		myfile.open(filename+"Stats.txt");
 		//build map
 		for (string s; file >> s;)
 			htmlMap[s]++;
-		
+
 		regex ExpressKeyWord{ "\\w+" };
 		regex ExpressNumeric{ "\\d+\\.*\\d*\\w*" };
-		
+
 		for (auto &p : htmlMap)
 		{
-			if(regex_match(p.first, ExpressKeyWord) || regex_match(p.first, ExpressNumeric))
+			if (regex_match(p.first, ExpressKeyWord) || regex_match(p.first, ExpressNumeric))
 			{
 				myfile << p.first << " / " << p.second << endl;
-			}			
-		}			
+			}
+		}
 		myfile.close();
 		file.close();
 	}
-	
-		
+
+
 	//Contenue
 	if (couleur)
 	{
-		myHtmlFile << filename << " + couleur" << "<br>";
-		//ifstream in(filename);
 		file.open(filename);
 
-		vector<string> FileTemp;
-		for (string s; getline(file, s);)
-			FileTemp.push_back(s);
 
-		vector<string> listCPP = {
-			"alignas"
-			,"alignof"
-			,"and"
-			,"and_eq"
-			,"asm"
-			,"auto"
-			,"bitand"
-			,"bitor"
-			,"bool"
-			,"break"
-			,"case"
-			,"catch"
-			,"char"
-			,"class"
-			,"compl"
-			,"const"
-			,"constexpr"
-			,"const_cast"
-			,"continue"
-			,"decltype"
-			,"default"
-			,"delete"
-			,"do"
-			,"double"
-			,"dynamic_cast"
-			,"else"
-			,"enum"
-			,"explicit"
-			,"export"
-			,"extern"
-			,"false"
-			,"float"
-			,"for"
-			,"friend"
-			,"goto"
-			,"if"
-			,"inline"
-			,"int"
-			,"include"
-			,"long"
-			,"mutable"
-			,"namespace"
-			,"new"
-			,"noexcept"
-			,"not"
-			,"not_eq"
-			,"nullptr"
-			,"operator"
-			,"or"
-			,"or_eq"
-			,"private"
-			,"protected"
-			,"public"
-			,"register"
-			,"reinterpret_cast"
-			,"return"
-			,"short"
-			,"signed"
-			,"sizeof"
-			,"static"
-			,"static_assert"
-			,"static_cast"
-			,"struct"
-			,"switch"
-			,"template"
-			,"this"
-			,"thread_local"
-			,"throw"
-			,"true"
-			,"try"
-			,"typedef"
-			,"typeid"
-			,"typename"
-			,"union"
-			,"unsigned"
-			,"using"
-			,"virtual"
-			,"void"
-			,"volatile"
-			,"wchar_t"
-			,"while"
-			,"xor"
-			,"xor_eq" };
+		vector<string>listCPP = {
+			"alignas","alignof","and","and_eq","asm"
+			,"auto","bitand","bitor","bool"
+			,"break","case","catch","char"
+			,"class","compl","const","constexpr"
+			,"const_cast","continue","decltype","default"
+			,"delete","do","double","dynamic_cast"
+			,"else","enum","explicit","export"
+			,"extern","false","float","for"
+			,"friend","goto","if","inline"
+			,"int","include","long","mutable"
+			,"namespace","new","noexcept","not"
+			,"not_eq","nullptr","operator","or"
+			,"or_eq","private","protected","public"
+			,"register","reinterpret_cast","return","short"
+			,"signed","sizeof","static","static_assert"
+			,"static_cast","struct","switch","template"
+			,"this","thread_local","throw","true"
+			,"try","typedef","typeid","typename"
+			,"union","unsigned","using","virtual"
+			,"void","volatile","wchar_t","while"
+			,"xor","xor_eq" };
 
-		
 
-		regex Express;	
+		regex Express;
 		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
 		{
 			*begin = regex_replace(*begin, regex{ "&" }, "&amp;");
 			*begin = regex_replace(*begin, regex{ "<" }, "&lt;");
 			*begin = regex_replace(*begin, regex{ ">" }, "&gt;");
-			
+
 			for (vector<string>::iterator keywordPos = listCPP.begin(); keywordPos != listCPP.end(); ++keywordPos)
 			{
 				Express = "\\b" + *keywordPos + "\\b";
-				
+
 				*begin = regex_replace(*begin, Express, "<span style='color:blue'>" + *keywordPos + "</span>");
 			}
 			myHtmlFile << *begin << "<br>" << flush;
@@ -192,21 +130,17 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 	}
 	else
 	{
-		//ifstream in(filename);
 		file.open(filename);
-		vector<string> FileTemp;
-		for (string s; getline(file, s);)
-			FileTemp.push_back(s);
 
 		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
 		{
 			*begin = regex_replace(*begin, regex{ "&" }, "&amp;");
 			*begin = regex_replace(*begin, regex{ "<" }, "&lt;");
 			*begin = regex_replace(*begin, regex{ ">" }, "&gt;");
-		   	myHtmlFile << *begin << "<br>" << flush;
+			myHtmlFile << *begin << "<br>" << flush;
 		}
 		file.close();
-	}	
+	}
 	//footer
 	myHtmlFile << "</pre></body></html>" << endl;
 	myHtmlFile.close();
@@ -222,8 +156,6 @@ int main(int argc, char* argv[])
 	//arguments.push_back("-stat");
 	//arguments.push_back("-couleur");
 	//arguments.push_back("fuck.cpp");
-
-	
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
@@ -247,14 +179,14 @@ int main(int argc, char* argv[])
 			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
-				filename = *it;				
-				convertirHtml(couleur, stat, htmlMap, filename);				
+				filename = *it;
+				convertirHtml(couleur, stat, htmlMap, filename);
 			}
 		}
 	}
 	else
 	{
-		cout << "Pas de parametre" << endl;
+		cout << "vous avez entre aucun parametre" << endl;
 	}
 	return 0;
 }
