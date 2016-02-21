@@ -10,6 +10,7 @@ Charlie Laplante
 #include <iterator>
 #include <algorithm>
 #include <regex>
+#include <thread>
 using namespace std;
 
 
@@ -155,6 +156,9 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 
 int main(int argc, char* argv[])
 {
+	unsigned int n = thread::hardware_concurrency();
+	std::cout << n << " concurrent threads are supported.\n";
+
 	vector<string> arguments(argv, argv + argc);
 	//Forcer des arguments ICI
 	//-------------------------
