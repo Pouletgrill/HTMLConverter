@@ -11,7 +11,9 @@ Charlie Laplante
 #include <algorithm>
 #include <regex>
 #include <thread>
+#include <chrono>
 using namespace std;
+using namespace chrono;
 
 
 
@@ -156,8 +158,8 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 
 int main(int argc, char* argv[])
 {
-	unsigned int n = thread::hardware_concurrency();
-	std::cout << n << " concurrent threads are supported.\n";
+	const int nbCoeur = thread::hardware_concurrency();
+		
 
 	vector<string> arguments(argv, argv + argc);
 	//Forcer des arguments ICI
@@ -177,21 +179,47 @@ int main(int argc, char* argv[])
 		bool stat = AnalyseParameter(begin(arguments),
 			end(arguments),
 			[](string param) {return param == "/stat" || param == "-stat"; });
-
+	
 		//la map html
 		map<string, int> htmlMap;
-
+		
+	
+		
 		//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 		vector<string>::iterator it = begin(arguments);
+		high_resolution_clock::time_point tempSequenceDebut = high_resolution_clock::now();
+		for (string filename; it != end(arguments); it++)
+		{
+			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
+			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
+			{
+					filename = *it;	
+					convertirHtml(couleur, stat, htmlMap, filename);
+			}
+		}
+		high_resolution_clock::time_point tempSequenceFin = high_resolution_clock::now();
+		duration<double> time_span_Seq = duration_cast<duration<double>>(tempSequenceFin - tempSequenceDebut);
+
+		//Parralle
+		vector<thread> lesThreads;
+	    it = begin(arguments);
+		high_resolution_clock::time_point tempParaDebut = high_resolution_clock::now();
 		for (string filename; it != end(arguments); it++)
 		{
 			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 			{
 				filename = *it;
-				convertirHtml(couleur, stat, htmlMap, filename);
+				thread t1(convertirHtml, couleur, stat, htmlMap, filename);
+				lesThreads.push_back(t1);
 			}
 		}
+		high_resolution_clock::time_point tempParaFin = high_resolution_clock::now();
+		duration<double> time_span_Para = duration_cast<duration<double>>(tempSequenceFin - tempSequenceDebut);
+
+		cout << "Sequenciel : " << time_span_Seq.count()<<endl;
+		cout<<"Parralelle : " << time_span_Para.count() << endl;
+	
 	}
 	else
 	{
