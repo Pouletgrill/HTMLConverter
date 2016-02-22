@@ -166,7 +166,16 @@ int main(int argc, char* argv[])
 	//-------------------------
 	//arguments.push_back("-stat");
 	//arguments.push_back("-couleur");
-	//arguments.push_back("fuck.cpp");
+	arguments.push_back("fuck.cpp");
+	arguments.push_back("fuck - Copie.cpp");
+	for (int i = 2; i < 8; i++)
+	{
+		arguments.push_back("fuck - Copie("+to_string(i)+").cpp");
+	}
+
+
+
+
 
 	//Enlever premier argument qui est le nom de l'executable
 	arguments.erase(arguments.begin());
@@ -202,20 +211,27 @@ int main(int argc, char* argv[])
 
 		//Parralle
 		vector<thread> lesThreads;
+		for (int i = 0; i < nbCoeur; ++i)
+		{
+			lesThreads.push_back(thread());
+		}
 	    it = begin(arguments);
+
 		high_resolution_clock::time_point tempParaDebut = high_resolution_clock::now();
+		int i = 0;
 		for (string filename; it != end(arguments); it++)
 		{
-			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
-			for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
+			if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1); for (auto & c : str)
+				c = toupper(c); return  str == "CPP"; }))
 			{
 				filename = *it;
-				thread t1(convertirHtml, couleur, stat, htmlMap, filename);
-				lesThreads.push_back(t1);
+				lesThreads[i] = thread(convertirHtml, couleur, stat, htmlMap, filename);
+				//lesThreads.push_back(t1);
 			}
+			++i;
 		}
 		high_resolution_clock::time_point tempParaFin = high_resolution_clock::now();
-		duration<double> time_span_Para = duration_cast<duration<double>>(tempSequenceFin - tempSequenceDebut);
+		duration<double> time_span_Para = duration_cast<duration<double>>(tempParaFin - tempParaDebut);
 
 		cout << "Sequenciel : " << time_span_Seq.count()<<endl;
 		cout<<"Parralelle : " << time_span_Para.count() << endl;
