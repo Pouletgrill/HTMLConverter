@@ -17,20 +17,15 @@ using namespace chrono;
 
 
 
-bool FileExist(string filename)
+bool FileExist(string &filename) 
 {
 	return ifstream{ filename }.good();
 }
 
 template<class it, class T>
-bool AnalyseParameter(it debut, it end, const T &pred)
+bool AnalyseParameter(it debut, it fin, const T &pred)
 {
-	for (; debut != end; ++debut)
-	{
-		if (pred(*debut))
-			return true;
-	}
-	return false;
+	return find_if(debut,fin,pred)!=fin;
 }
 
 template<class it, class T>
@@ -41,13 +36,11 @@ bool FindFichier(it param, const T &pred)
 
 void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string filename)
 {
-	ifstream file;
-
-	file.open(filename);
+	ifstream file(filename);
 	vector<string> FileTemp;
 	for (string s; getline(file, s);)
 		FileTemp.push_back(s);
-	file.close();
+	
 
 	ofstream myHtmlFile;
 	myHtmlFile.open(filename + ".html");//Création du fichier
@@ -119,19 +112,19 @@ void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string fil
 
 
 		regex Express;
-		for (vector<string>::iterator begin = FileTemp.begin(); begin != FileTemp.end(); ++begin)
+		for (auto & begin : FileTemp)
 		{
-			*begin = regex_replace(*begin, regex{ "&" }, "&amp;");
-			*begin = regex_replace(*begin, regex{ "<" }, "&lt;");
-			*begin = regex_replace(*begin, regex{ ">" }, "&gt;");
+			begin = regex_replace(begin, regex{ "&" }, "&amp;");
+			begin = regex_replace(begin, regex{ "<" }, "&lt;");
+			begin = regex_replace(begin, regex{ ">" }, "&gt;");
 
 			for (vector<string>::iterator keywordPos = listCPP.begin(); keywordPos != listCPP.end(); ++keywordPos)
 			{
 				Express = "\\b" + *keywordPos + "\\b";
 
-				*begin = regex_replace(*begin, Express, "<span style='color:blue'>" + *keywordPos + "</span>");
+				begin = regex_replace(begin, Express, "<span style='color:blue'>" + *keywordPos + "</span>");
 			}
-			myHtmlFile << *begin << "<br>" << flush;
+			myHtmlFile << begin << "<br>" << flush;
 		}
 		file.close();
 	}
@@ -161,7 +154,7 @@ int main(int argc, char* argv[])
 	const int nbCoeur = thread::hardware_concurrency();
 		
 
-	vector<string> arguments(argv, argv + argc);
+	vector<string> arguments(argv + 1, argv + argc);
 	//Forcer des arguments ICI
 	//-------------------------
 	//arguments.push_back("-stat");
@@ -173,12 +166,6 @@ int main(int argc, char* argv[])
 		arguments.push_back("fuck - Copie("+to_string(i)+").cpp");
 	}
 
-
-
-
-
-	//Enlever premier argument qui est le nom de l'executable
-	arguments.erase(arguments.begin());
 	if (!arguments.empty())
 	{
 		//Check les paramètres
@@ -241,5 +228,4 @@ int main(int argc, char* argv[])
 	{
 		cout << "vous avez entre aucun parametre" << endl;
 	}
-	return 0;
 }
