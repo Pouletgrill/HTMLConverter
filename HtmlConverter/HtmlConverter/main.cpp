@@ -157,13 +157,13 @@ int main(int argc, char* argv[])
 	vector<string> arguments(argv + 1, argv + argc);
 	//Forcer des arguments ICI
 	//-------------------------
-	//arguments.push_back("-stat");
-	//arguments.push_back("-couleur");
+	arguments.push_back("-stat");
+	arguments.push_back("-couleur");
 	arguments.push_back("fuck.cpp");
 	arguments.push_back("fuck - Copie.cpp");
-	for (int i = 2; i < 8; i++)
+	for (int i = 2; i < 64; i++)
 	{
-		arguments.push_back("fuck - Copie("+to_string(i)+").cpp");
+		arguments.push_back("fuck - Copie ("+to_string(i)+").cpp");
 	}
 
 	if (!arguments.empty())
@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
 		map<string, int> htmlMap;
 		
 	
-		
+		//Sequenciel
 		//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 		vector<string>::iterator it = begin(arguments);
 		high_resolution_clock::time_point tempSequenceDebut = high_resolution_clock::now();
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 		high_resolution_clock::time_point tempSequenceFin = high_resolution_clock::now();
 		duration<double> time_span_Seq = duration_cast<duration<double>>(tempSequenceFin - tempSequenceDebut);
 
-		//Parralle
+		//Parrallele
 		vector<thread> lesThreads;
 		for (int i = 0; i < nbCoeur; ++i)
 		{
@@ -212,10 +212,18 @@ int main(int argc, char* argv[])
 				c = toupper(c); return  str == "CPP"; }))
 			{
 				filename = *it;
-				lesThreads[i] = thread(convertirHtml, couleur, stat, htmlMap, filename);
+				int tempo = i%nbCoeur;
+				if (lesThreads[tempo].joinable())
+					lesThreads[tempo].join();
+				lesThreads[tempo] = thread(convertirHtml, couleur, stat, htmlMap, filename);
 				//lesThreads.push_back(t1);
 			}
 			++i;
+		}
+		for (int i = 0; i < nbCoeur; ++i)
+		{
+			if (lesThreads[i].joinable())
+				lesThreads[i].join();
 		}
 		high_resolution_clock::time_point tempParaFin = high_resolution_clock::now();
 		duration<double> time_span_Para = duration_cast<duration<double>>(tempParaFin - tempParaDebut);
