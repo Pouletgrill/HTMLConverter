@@ -228,8 +228,13 @@ int main(int argc, char* argv[])
 		high_resolution_clock::time_point tempParaFin = high_resolution_clock::now();
 		duration<double> time_span_Para = duration_cast<duration<double>>(tempParaFin - tempParaDebut);
 
-		cout << "Sequenciel : " << time_span_Seq.count()<<endl;
-		cout<<"Parralelle : " << time_span_Para.count() << endl;
+		ofstream statfile("statfichier.txt",ios::app);
+		statfile << "Nombre de coeur" << nbCoeur << endl;
+		statfile << "Pour " << arguments.size()-2 << " fichier"<<endl;
+		statfile << "Sequenciel : " << time_span_Seq.count()<<endl;
+		statfile << "Parralelle : " << time_span_Para.count() << endl;
+		statfile << "--------------------------------------------------------------------" << endl;
+		
 	
 	}
 	else
