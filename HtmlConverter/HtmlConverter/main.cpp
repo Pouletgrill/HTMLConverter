@@ -1,6 +1,10 @@
 /*
-Xavier Brosseau
-Charlie Laplante
+HTML Converter
+--------------
+version Test 
+Nb doc * 3 type de test
+--------------
+Par Xavier Brosseau & Charlie Laplante
 */
 #include <iostream>
 #include <map>
@@ -41,7 +45,7 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat,
 	ifstream file(filename);
 
 	ofstream myHtmlFile;
-	myHtmlFile.open(filename + ".html");//Création du fichier
+	myHtmlFile.open(filename + ".html");//CrÃ©ation du fichier
 										//Header
 	myHtmlFile << "<html><head>" << "\n" <<
 		"<head>" << "\n" <<
@@ -167,7 +171,7 @@ int main(int argc, char* argv[])
 
 		if (!arguments.empty())
 		{
-			//Check les paramètres
+			//Check les paramÃ¨tres
 			bool couleur = AnalyseParameter(begin(arguments),
 				end(arguments),
 				[](string param) {return param == "/couleur" || param == "-couleur"; });
@@ -180,7 +184,7 @@ int main(int argc, char* argv[])
 			vector<string>::iterator it = begin(arguments);
 			
 			//Sequenciel
-			//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
+			//ce promÃ¨ne dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 			
 			/**/high_resolution_clock::time_point tempSequenceDebut = high_resolution_clock::now();
 			for (string filename; it != end(arguments); it++)
