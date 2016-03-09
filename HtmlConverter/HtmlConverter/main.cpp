@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 			//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 			
 			/**/high_resolution_clock::time_point tempSequenceDebut = high_resolution_clock::now();
-			for (string filename : arguments)
+			for (string filename; it != end(arguments); it++)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 				for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 
 			high_resolution_clock::time_point tempTPDebut = high_resolution_clock::now();
 			int i = 0;
-			for (string filename : arguments)
+			for (string filename; it != end(arguments); it++)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1); for (auto & c : str)
 					c = toupper(c); return  str == "CPP"; }))
@@ -236,7 +236,7 @@ int main(int argc, char* argv[])
 
 			high_resolution_clock::time_point tempParaDebut = high_resolution_clock::now();
 			int i2 = 0;
-			for (string filename : arguments)
+			for (string filename; it != end(arguments); it++)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1); for (auto & c : str)
 					c = toupper(c); return  str == "CPP"; }))
