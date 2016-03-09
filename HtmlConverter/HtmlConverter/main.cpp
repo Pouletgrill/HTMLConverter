@@ -34,7 +34,9 @@ bool FindFichier(it param, const T &pred)
 	return pred(*param) && FileExist(*param);
 }
 
-void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string, int> htmlMap, string filename)
+void convertirHtml(vector<string> &listCPP, bool couleur, bool stat,
+				   map<string, int> htmlMap, string filename,
+			  	   regex &ExpressKeyWord, regex &ExpressNumeric)
 {
 	ifstream file(filename);
 
@@ -55,15 +57,13 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string,
 	//Creation du fichier Stats
 	if (stat)
 	{
-		file.open(filename);
 		ofstream myfile;
 		myfile.open(filename + "Stats.txt");
 		//build map
 		for (string s; file >> s;)
 			htmlMap[s]++;
 
-		regex ExpressKeyWord{ "\\w+" };
-		regex ExpressNumeric{ "\\d+\\.*\\d*\\w*" };
+
 
 		for (auto &p : htmlMap)
 		{
@@ -73,15 +73,14 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string,
 			}
 		}
 		myfile.close();
-		file.close();
+		file.clear();
+		file.seekg(0, ios::beg);
 	}
 
 
 	//Contenue
 	if (couleur)
 	{
-		file.open(filename);
-
 		regex Express;
 		for (string begin; getline(file, begin);)
 		{
@@ -95,22 +94,22 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string,
 
 				begin = regex_replace(begin, Express, "<span style='color:blue'>" + *keywordPos + "</span>");
 			}
-			myHtmlFile << begin << "<br>" << flush;
+			myHtmlFile << begin << "<br>";
 		}
-		file.close();
+		file.clear();
+		file.seekg(0, ios::beg);
 	}
 	else
 	{
-		file.open(filename);
-
 		for (string begin; getline(file, begin);)
 		{
 			begin = regex_replace(begin, regex{ "&" }, "&amp;");
 			begin = regex_replace(begin, regex{ "<" }, "&lt;");
 			begin = regex_replace(begin, regex{ ">" }, "&gt;");
-			myHtmlFile << begin << "<br>" << flush;
+			myHtmlFile << begin << "<br>";
 		}
-		file.close();
+		file.clear();
+		file.seekg(0, ios::beg);
 	}
 	//footer
 	myHtmlFile << "</pre></body></html>\n";
@@ -145,6 +144,8 @@ int main(int argc, char* argv[])
 		,"void","volatile","wchar_t","while"
 		,"xor","xor_eq" };
 	const int nbCoeur = thread::hardware_concurrency();
+	regex ExpressKeyWord{ "\\w+" };
+	regex ExpressNumeric{ "\\d+\\.*\\d*\\w*" };
 	const int NbFichier = 30;
 
 	ofstream statfile("statfichier.txt", ios::app);
@@ -159,7 +160,9 @@ int main(int argc, char* argv[])
 		arguments.push_back("-couleur");
 		for (int i = 0; i < k; i++)
 		{
-			arguments.push_back("document1.cpp");
+			//arguments.push_back("document1.cpp");
+			//arguments.push_back("document2.cpp");
+			arguments.push_back("document3.cpp");
 		}
 
 		if (!arguments.empty())
@@ -180,13 +183,13 @@ int main(int argc, char* argv[])
 			//ce promène dans la liste d'argument pour trouver les fichiers qui existe et qui respectent le predicat
 			
 			/**/high_resolution_clock::time_point tempSequenceDebut = high_resolution_clock::now();
-			for (string filename; it != end(arguments); it++)
+			for (string filename : arguments)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1);
 				for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 				{
 					filename = *it;
-					convertirHtml(listCPP, couleur, stat, htmlMap, filename);
+					convertirHtml(listCPP, couleur, stat, htmlMap, filename, ExpressKeyWord, ExpressNumeric);
 				}
 			}
 			high_resolution_clock::time_point tempSequenceFin = high_resolution_clock::now();
@@ -202,7 +205,7 @@ int main(int argc, char* argv[])
 
 			high_resolution_clock::time_point tempTPDebut = high_resolution_clock::now();
 			int i = 0;
-			for (string filename; it != end(arguments); it++)
+			for (string filename : arguments)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1); for (auto & c : str)
 					c = toupper(c); return  str == "CPP"; }))
@@ -211,7 +214,7 @@ int main(int argc, char* argv[])
 					int tempo = i%nbCoeur;
 					if (lesThreads[tempo].joinable())
 						lesThreads[tempo].join();
-					lesThreads[tempo] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename);
+					lesThreads[tempo] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename, ExpressKeyWord, ExpressNumeric);
 				}
 				++i;
 			}
@@ -233,13 +236,13 @@ int main(int argc, char* argv[])
 
 			high_resolution_clock::time_point tempParaDebut = high_resolution_clock::now();
 			int i2 = 0;
-			for (string filename; it != end(arguments); it++)
+			for (string filename : arguments)
 			{
 				if (FindFichier(it, [](string param) {string str = param.substr(param.find_last_of(".") + 1); for (auto & c : str)
 					c = toupper(c); return  str == "CPP"; }))
 				{
 					filename = *it;
-					lesThreads2[i2] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename);
+					lesThreads2[i2] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename, ExpressKeyWord, ExpressNumeric);
 				}
 				++i2;
 			}
@@ -253,11 +256,16 @@ int main(int argc, char* argv[])
 
 			
 			statfile << time_span_Seq.count() << "\t\t" << time_span_TP.count() << "\t\t" << time_span_Para.count() << "\n";
-			cout << k << endl;
+			cout << k << '\a' << endl;
 		}
 		else
 		{
 			cout << "vous avez entre aucun parametre" << endl;
-		}
+		}		
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		cout << '\a';
+		this_thread::sleep_for(chrono::milliseconds(500));
 	}
 }
