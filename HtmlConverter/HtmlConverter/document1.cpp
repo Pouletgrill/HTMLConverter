@@ -34,7 +34,7 @@ bool FindFichier(it param, const T &pred)
 	return pred(*param) && FileExist(*param);
 }
 
-void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string, int> htmlMap, string filename)
+void convertirHtml(bool couleur, bool stat, map<string, int> htmlMap, string filename)
 {
 	ifstream file(filename);
 	vector<string> FileTemp;
@@ -86,6 +86,31 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string,
 	{
 		file.open(filename);
 
+
+		vector<string>listCPP = {
+			"alignas","alignof","and","and_eq","asm"
+			,"auto","bitand","bitor","bool"
+			,"break","case","catch","char"
+			,"class","compl","const","constexpr"
+			,"const_cast","continue","decltype","default"
+			,"delete","do","double","dynamic_cast"
+			,"else","enum","explicit","export"
+			,"extern","false","float","for"
+			,"friend","goto","if","inline"
+			,"int","include","long","mutable"
+			,"namespace","new","noexcept","not"
+			,"not_eq","nullptr","operator","or"
+			,"or_eq","private","protected","public"
+			,"register","reinterpret_cast","return","short"
+			,"signed","sizeof","static","static_assert"
+			,"static_cast","struct","switch","template"
+			,"this","thread_local","throw","true"
+			,"try","typedef","typeid","typename"
+			,"union","unsigned","using","virtual"
+			,"void","volatile","wchar_t","while"
+			,"xor","xor_eq" };
+
+
 		regex Express;
 		for (auto & begin : FileTemp)
 		{
@@ -126,33 +151,9 @@ void convertirHtml(vector<string> &listCPP, bool couleur, bool stat, map<string,
 
 int main(int argc, char* argv[])
 {
-	vector<string>listCPP = {
-		"alignas","alignof","and","and_eq","asm"
-		,"auto","bitand","bitor","bool"
-		,"break","case","catch","char"
-		,"class","compl","const","constexpr"
-		,"const_cast","continue","decltype","default"
-		,"delete","do","double","dynamic_cast"
-		,"else","enum","explicit","export"
-		,"extern","false","float","for"
-		,"friend","goto","if","inline"
-		,"int","include","long","mutable"
-		,"namespace","new","noexcept","not"
-		,"not_eq","nullptr","operator","or"
-		,"or_eq","private","protected","public"
-		,"register","reinterpret_cast","return","short"
-		,"signed","sizeof","static","static_assert"
-		,"static_cast","struct","switch","template"
-		,"this","thread_local","throw","true"
-		,"try","typedef","typeid","typename"
-		,"union","unsigned","using","virtual"
-		,"void","volatile","wchar_t","while"
-		,"xor","xor_eq" };
 	const int nbCoeur = thread::hardware_concurrency();
-	const int NbFichier = 30;
-
 	ofstream statfile("statfichier.txt", ios::app);
-
+	const int NbFichier = 30;
 	for (int k = 1; k <= NbFichier; ++k)
 	{
 
@@ -190,7 +191,7 @@ int main(int argc, char* argv[])
 				for (auto & c : str) c = toupper(c); return  str == "CPP"; }))
 				{
 					filename = *it;
-					convertirHtml(listCPP, couleur, stat, htmlMap, filename);
+					convertirHtml(couleur, stat, htmlMap, filename);
 				}
 			}
 			high_resolution_clock::time_point tempSequenceFin = high_resolution_clock::now();
@@ -215,7 +216,7 @@ int main(int argc, char* argv[])
 					int tempo = i%nbCoeur;
 					if (lesThreads[tempo].joinable())
 						lesThreads[tempo].join();
-					lesThreads[tempo] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename);
+					lesThreads[tempo] = thread(convertirHtml, couleur, stat, htmlMap, filename);
 				}
 				++i;
 			}
@@ -243,7 +244,7 @@ int main(int argc, char* argv[])
 					c = toupper(c); return  str == "CPP"; }))
 				{
 					filename = *it;
-					lesThreads2[i2] = thread(convertirHtml, listCPP, couleur, stat, htmlMap, filename);
+					lesThreads2[i2] = thread(convertirHtml, couleur, stat, htmlMap, filename);
 				}
 				++i2;
 			}
@@ -256,7 +257,7 @@ int main(int argc, char* argv[])
 			duration<double> time_span_Para = duration_cast<duration<double>>(tempParaFin - tempParaDebut);
 
 			
-			statfile << time_span_Seq.count() << "\t\t" << time_span_TP.count() << "\t\t" << time_span_Para.count() << "\n";
+			statfile << time_span_Seq.count() << "\t" << time_span_TP.count() << "\t" << time_span_Para.count() << "\n";
 
 		}
 		else
