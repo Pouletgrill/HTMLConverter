@@ -164,9 +164,9 @@ int main(int argc, char* argv[])
 		arguments.push_back("-couleur");
 		for (int i = 0; i < k; i++)
 		{
-			//arguments.push_back("document1.cpp");
+			arguments.push_back("document1.cpp");
 			//arguments.push_back("document2.cpp");
-			arguments.push_back("document3.cpp");
+			//arguments.push_back("document3.cpp");
 		}
 
 		if (!arguments.empty())
@@ -258,8 +258,11 @@ int main(int argc, char* argv[])
 			high_resolution_clock::time_point tempParaFin = high_resolution_clock::now();
 			duration<double> time_span_Para = duration_cast<duration<double>>(tempParaFin - tempParaDebut);
 
+		
+			statfile << "Seq:" << time_span_Seq.count() << "\t\t"
+				     << "ThreadPool:" << time_span_TP.count() << "\t\t"
+				     << "Parallele:" << time_span_Para.count() << "\n";
 			
-			statfile << time_span_Seq.count() << "\t\t" << time_span_TP.count() << "\t\t" << time_span_Para.count() << "\n";
 			cout << k << '\a' << endl;
 		}
 		else
@@ -267,6 +270,7 @@ int main(int argc, char* argv[])
 			cout << "vous avez entre aucun parametre" << endl;
 		}		
 	}
+	//Alerte de fin
 	for (int i = 0; i < 5; i++)
 	{
 		cout << '\a';
