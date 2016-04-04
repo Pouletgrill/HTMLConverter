@@ -12,7 +12,7 @@ class Boite
 public:
 	Boite();
 	Boite(string t);
-	Boite(Iboite combo);
+/**/	Boite(Iboite combo); //*/
 	~Boite();
 
 	string Emboiter(string t);

@@ -11,10 +11,10 @@ Boite::Boite(string t)
 	texte_ = Emboiter(t);
 }
 
-Boite::Boite(Iboite combo)
+/**/Boite::Boite(Iboite combo)
 {
 	texte_ = "comboVertical";
-}
+}//*/
 Boite::~Boite()
 {
 	

@@ -2,10 +2,10 @@
 #include "combovertical.h"
 #include "combohorizontal.h"
 #include <iostream>
+using namespace std;
 
 int main()
 {
-	using namespace std;
 	Boite b;
 	cout << b << endl;
 	string texte = R"(Man! Hey!!!
@@ -15,8 +15,8 @@ multiligne)";
 	Boite b0{ texte };
 	Boite b1{ aut_texte };
 	cout << b0 << endl << b1 << endl;
-	ComboVertical cv{ b0, b1 };
-	cout << Boite{ cv } << endl;
+	/**/	ComboVertical cv{ b0, b1 };
+	cout << Boite{ cv } << endl;//*/
 
 
 

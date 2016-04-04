@@ -1,7 +1,7 @@
 #pragma once
 #include "boite.h"
 
-struct Iboite
+volatile struct Iboite
 {
 
 	Iboite();
