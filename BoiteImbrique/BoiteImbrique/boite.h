@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOITE_H_
+#define BOITE_H_
 #include "iboite.h"
 #include <string>
 #include <sstream>
@@ -21,3 +22,4 @@ public:
 	friend ostream& operator<<(ostream& os,const Boite& b);
 	Boite operator=(const Boite& b);
 };
+#endif

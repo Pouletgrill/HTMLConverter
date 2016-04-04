@@ -1,1 +1,4 @@
-#pragma once
+#ifndef COMBOHORIZONTAL_H_
+#define COMBOHORIZONTAL_H_
+
+#endif
