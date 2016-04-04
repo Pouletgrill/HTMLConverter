@@ -5,7 +5,6 @@
 #include <sstream>
 using namespace std;
 
-
 class Boite
 {
 	string texte_;

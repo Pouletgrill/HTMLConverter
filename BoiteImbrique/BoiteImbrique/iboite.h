@@ -1,8 +1,7 @@
 #ifndef IBOITE_H_
 #define IBOITE_H_
-#include "boite.h"
 
-volatile struct Iboite
+struct Iboite
 {
 
 	Iboite();
