@@ -8,12 +8,13 @@ Boite::Boite()
 Boite::Boite(string t)
 {
 	largeur_ = Largeur(t);
+	textBrut_ = t;
 	texte_ = Emboiter(t);
 }
 
-Boite::Boite(Iboite *combo)
+Boite::Boite(icombo &combo)
 {
-	texte_ = combo->Emboiter();
+	texte_ = combo.Emboiter();
 }
 Boite::~Boite()
 {
@@ -45,10 +46,7 @@ string Boite::Couche(int largeur)
 {
 	return "+"+string(largeur, '-')+"+\n";
 }
-Boite Boite::operator=(const Boite & b)
-{
-	return Boite(b.texte_);
-}
+
 ostream &operator<<(ostream & os, const Boite & b)
 {
 	os << b.texte_;

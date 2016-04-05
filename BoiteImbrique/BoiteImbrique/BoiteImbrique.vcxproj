@@ -144,14 +144,14 @@
   <ItemGroup>
     <ClCompile Include="boite.cpp" />
     <ClCompile Include="combovertical.cpp" />
-    <ClCompile Include="Iboite.cpp" />
+    <ClCompile Include="icombo.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boite.h" />
     <ClInclude Include="combohorizontal.h" />
     <ClInclude Include="combovertical.h" />
-    <ClInclude Include="iboite.h" />
+    <ClInclude Include="icombo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
