@@ -1,6 +1,8 @@
 #include "combovertical.h"
 
-ComboVertical::ComboVertical()
+ComboVertical::ComboVertical():
+	texte_{},
+	Largeur_{}
 {
 
 }
@@ -13,7 +15,7 @@ ComboVertical::ComboVertical(Boite a, Boite b):
 	if (a_.GetLargeur() > b_.GetLargeur())
 		Largeur_ = a_.GetLargeur();
 	else
-		Largeur_ = b_.GetLargeur();
+		Largeur_ = b_.GetLargeur();	
 }
 
 string ComboVertical::Emboiter()
