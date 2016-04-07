@@ -25,7 +25,7 @@ multiligne)";
 	cout << "\n********************************\n";
 	ComboVertical cvplus{ Boite{ cv }, Boite{ ch } };
 	cout << Boite{ cvplus } << endl;
-	ComboHorizontal chplus{ Boite{ cv }, Boite{ ch } };
+	/*ComboHorizontal chplus{ Boite{ cv }, Boite{ ch } };
 	cout << Boite{ chplus } << endl;
 	ComboVertical cvv{ Boite{ chplus }, Boite{ "coucou" } };
 	cout << Boite{ cvv } << endl;
