@@ -13,6 +13,7 @@ public:
 	ComboHorizontal(Boite a, Boite b);
 
 	virtual string Emboiter() override;
+	virtual int GetLargeur() override;
+	virtual string GetTexteBrut() override;
 };
-#endif
 #endif

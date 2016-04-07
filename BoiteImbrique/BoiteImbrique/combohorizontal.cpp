@@ -12,20 +12,30 @@ ComboHorizontal::ComboHorizontal(Boite a, Boite b):
 	a_(a),
 	b_(b)
 {
-	Largeur_= a_.GetLargeur()+b_GetLargeur();	
+	Largeur_= a_.GetLargeur()+b_.GetLargeur();	
 }
 
 string ComboHorizontal::Emboiter()
 {
-	istringstream issA(a_.GetTexte());
-	istringstream issB(a_.GetTexte());
+	istringstream issA(a_.GetTexteBrut());
+	istringstream issB(b_.GetTexteBrut());
 
-	for (string tempA,tempB; getline(issA, tempA) || getline(issB, tempB);)
+	for (string tempA,tempB; getline(issA, tempA) && getline(issB, tempB);)
 	{
-		texte_ += "|" + tempA + string(a_.GetLargeur() - tempA.length(), ' ') + "|"+tempB + string(b_GetLargeur() - tempB.length(), ' ') + "|\n";
+		texte_ +=  tempA + string(a_.GetLargeur() - tempA.length(), ' ') + "|" + tempB + string(b_.GetLargeur() - tempB.length(), ' ') + "\n";
 	}
-
-	return a_.Couche(Largeur_) + texte_ + a_.Couche(Largeur_);	
+	Largeur_++;
+	return texte_;
 
 }
 
+int ComboHorizontal::GetLargeur()
+{
+	return Largeur_;
+}
+
+
+string ComboHorizontal::GetTexteBrut()
+{
+	return texte_;
+}

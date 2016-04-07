@@ -6,7 +6,9 @@ using namespace std;
 struct icombo
 {
 public:
-	icombo();
+	icombo() {};
 	virtual string Emboiter() { return{}; };
+	virtual int GetLargeur() { return{}; };
+	virtual string GetTexteBrut() { return{}; };
 };
 #endif

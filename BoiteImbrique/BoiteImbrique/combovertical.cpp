@@ -21,20 +21,35 @@ ComboVertical::ComboVertical(Boite a, Boite b):
 string ComboVertical::Emboiter()
 {
 
-	istringstream iss(a_.GetTexte());
+	istringstream iss(a_.GetTexteBrut());
 	for (string temp; getline(iss, temp);)
 	{
-		texte_ += "|" + temp + string(Largeur_ - temp.length(), ' ') + "|\n";
+		texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
 	}
 
-	texte_ += a_.Couche(Largeur_);
+	texte_ += CoucheMillieu(Largeur_);
 
-	iss = istringstream(b_.GetTexte());
+	iss = istringstream(b_.GetTexteBrut());
 	for (string temp; getline(iss, temp);)
 	{
-		texte_ += "|" + temp + string(Largeur_ - temp.length(), ' ') + "|\n";
+		texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
 	}
 
-	return a_.Couche(Largeur_) + texte_ + a_.Couche(Largeur_);
+	return texte_;
 }
 
+int ComboVertical::GetLargeur()
+{
+	return Largeur_;
+}
+
+string ComboVertical::GetTexteBrut()
+{
+	return texte_;
+}
+
+
+string ComboVertical::CoucheMillieu(int longueur)
+{
+	return  string(longueur, '-') + "\n";
+}

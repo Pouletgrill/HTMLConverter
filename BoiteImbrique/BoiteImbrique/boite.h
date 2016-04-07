@@ -16,14 +16,18 @@ public:
 	Boite();
 	Boite(string t);
 	Boite(icombo &combo);
-	Boite(const Boite&) = default;
+	Boite(const Boite& boite) {//= default;
+		texte_    = boite.texte_;
+		textBrut_ = boite.textBrut_;
+		largeur_  = boite.largeur_;
+	}
 	~Boite();
 
-	string GetTexte() {return textBrut_;}
-	int GetLargeur()  {return largeur_;}
+	string GetTexteBrut() { return textBrut_; }
+	int GetLargeur() { return largeur_; }
 	string Emboiter(string t);
 	int Largeur(string t);
 	string Couche(int largeur);
-	friend ostream& operator<<(ostream& os,const Boite& b);
+	friend ostream& operator<<(ostream& os, const Boite& b);
 };
 #endif

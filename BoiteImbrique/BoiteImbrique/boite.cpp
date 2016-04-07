@@ -9,12 +9,20 @@ Boite::Boite(string t)
 {
 	largeur_ = Largeur(t);
 	textBrut_ = t;
-	texte_ = Emboiter(t);
+	texte_ = Couche(largeur_) + Emboiter(t)+ Couche(largeur_);
 }
 
 Boite::Boite(icombo &combo)
+	:largeur_(combo.GetLargeur()),
+	textBrut_(combo.GetTexteBrut())
 {
-	texte_ = combo.Emboiter();
+	istringstream iss(combo.Emboiter());
+	texte_ =  "+" + string(combo.GetLargeur(), '-') + "+\n";
+	for (string temp; getline(iss, temp);)
+	{
+		texte_ += "|" + temp + "|\n";
+	}
+	texte_ += "+" + string(combo.GetLargeur(), '-') + "+";
 }
 Boite::~Boite()
 {
@@ -28,7 +36,7 @@ string Boite::Emboiter(string t)
 	{
 		t += "|" + temp + string(largeur_ - temp.length(), ' ') + "|\n";
 	}
-	return Couche(largeur_)+t+Couche(largeur_);
+	return t;
 }
 
 int Boite::Largeur(string t)

@@ -11,7 +11,10 @@ class ComboVertical : public icombo
 public:
 	ComboVertical();
 	ComboVertical(Boite a, Boite b);
+	string CoucheMillieu(int longueur);
 
 	virtual string Emboiter() override;
+	virtual int GetLargeur() override;
+	virtual string GetTexteBrut() override;
 };
 #endif
