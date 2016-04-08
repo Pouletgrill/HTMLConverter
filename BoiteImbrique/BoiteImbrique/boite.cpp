@@ -20,7 +20,7 @@ Boite::Boite(icombo &combo)
 	texte_ =  "+" + string(combo.GetLargeur(), '-') + "+\n";
 	for (string temp; getline(iss, temp);)
 	{
-		texte_ += "|" + temp + "|\n";
+		texte_ += "|" + temp +"|\n";
 	}
 	texte_ += "+" + string(combo.GetLargeur(), '-') + "+";
 }

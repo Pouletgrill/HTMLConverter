@@ -19,29 +19,14 @@ string ComboHorizontal::Emboiter()
 {
 	istringstream issA(a_.GetTexteBrut());
 	istringstream issB(b_.GetTexteBrut());
-	bool fini = false;
-	for (string tempA, tempB; !fini;)
-	{
-		fini = true;
-		if (getline(issA, tempA))
-		{
-			texte_ += tempA + string(a_.GetLargeur() - tempA.length(), ' ') + "|";
-			fini = false;
-		}	
-		else
-		{
-			texte_ += string(a_.GetLargeur(), ' ')+"|";
-		}
 
-		if (getline(issB, tempB))
-		{
-			texte_ += tempB + string(b_.GetLargeur()+1 - tempB.length(), ' ') + "\n";
-			fini = false;
-		}
-		else
-		{
-			texte_ += string(b_.GetLargeur(), ' ') + "|";
-		}
+	for (string tempA, tempB; getline(issA, tempA) && getline(issB, tempB);)
+	{
+
+			texte_ += tempA + string(a_.GetLargeur() - tempA.length(), ' ') + "|";
+
+			texte_ += tempB + string(b_.GetLargeur() - tempB.length(), ' ') + "\n";
+			tempA = tempB = " ";
 	}
 	Largeur_++;
 	return texte_;

@@ -24,7 +24,10 @@ string ComboVertical::Emboiter()
 	istringstream iss(a_.GetTexteBrut());
 	for (string temp; getline(iss, temp);)
 	{
-		texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
+		if (temp == string(temp.length(), '-'))
+			texte_ += CoucheMillieu(Largeur_);
+		else
+			texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
 	}
 
 	texte_ += CoucheMillieu(Largeur_);
@@ -32,7 +35,10 @@ string ComboVertical::Emboiter()
 	iss = istringstream(b_.GetTexteBrut());
 	for (string temp; getline(iss, temp);)
 	{
-		texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
+		if (temp == string(temp.length(), '-'))
+			texte_ += CoucheMillieu(Largeur_);
+		else
+			texte_ += temp + string(Largeur_ - temp.length(), ' ') + "\n";
 	}
 
 	return texte_;
