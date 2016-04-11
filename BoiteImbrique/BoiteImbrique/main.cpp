@@ -6,6 +6,8 @@ using namespace std;
 
 int main()
 {
+
+	
 	Boite b;
 	cout << b << endl;
 	string texte = R"(Man! Hey!!!
@@ -19,12 +21,12 @@ multiligne)";
 	cout << Boite{ cv } << endl;
 
 
-
+	
 	ComboHorizontal ch{ b0, b1 };
 	cout << Boite{ ch } << endl;
 	ComboVertical cvplus{ Boite{ cv }, Boite{ ch } };
 	cout << Boite{ cvplus } << endl;
-	cout << "\n********************************\n";
+	
 	ComboHorizontal chplus{ Boite{ cv }, Boite{ ch } };
 	cout << Boite{ chplus } << endl;
 	/**/ComboVertical cvv{ Boite{ chplus }, Boite{ "coucou" } };

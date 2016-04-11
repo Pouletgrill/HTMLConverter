@@ -6,7 +6,8 @@
 class ComboHorizontal: public icombo
 {
 	int Largeur_;
-	string texte_;
+	int posmilieu_;
+	string texteBrut_;
 	Boite a_, b_;
 public:
 	ComboHorizontal();
@@ -14,6 +15,7 @@ public:
 
 	virtual string Emboiter() override;
 	virtual int GetLargeur() override;
+	virtual int GetPosMilieu() override;
 	virtual string GetTexteBrut() override;
 };
 #endif

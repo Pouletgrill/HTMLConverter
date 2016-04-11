@@ -3,20 +3,25 @@
 Boite::Boite()
 {
 	texte_ = "++\n++";
+	textBrut_ = "";
+	largeur_ = 0;
+	posmilieu_ = 0;	
 }
 
 Boite::Boite(string t)
 {
 	largeur_ = Largeur(t);
+	posmilieu_= 0;
 	textBrut_ = t;
 	texte_ = Couche(largeur_) + Emboiter(t)+ Couche(largeur_);
 }
 
 Boite::Boite(icombo &combo)
 	:largeur_(combo.GetLargeur()),
+	posmilieu_(combo.GetPosMilieu()),
 	textBrut_(combo.GetTexteBrut())
-{
-	istringstream iss(combo.Emboiter());
+{	
+	istringstream iss(textBrut_);
 	texte_ =  "+" + string(combo.GetLargeur(), '-') + "+\n";
 	for (string temp; getline(iss, temp);)
 	{

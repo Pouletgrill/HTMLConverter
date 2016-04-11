@@ -1,26 +1,26 @@
 #include "combovertical.h"
 
 ComboVertical::ComboVertical():
-	texte_{},
+	texteBrut_{},
 	Largeur_{}
 {
 
 }
 
 ComboVertical::ComboVertical(Boite a, Boite b):
-	texte_{},
 	a_(a),
 	b_(b)
-{
+{	
 	if (a_.GetLargeur() > b_.GetLargeur())
 		Largeur_ = a_.GetLargeur();
 	else
 		Largeur_ = b_.GetLargeur();	
+	texteBrut_ = Emboiter();
 }
 
 string ComboVertical::Emboiter()
 {
-
+	string texte_="";
 	istringstream iss(a_.GetTexteBrut());
 	for (string temp; getline(iss, temp);)
 	{
@@ -51,8 +51,9 @@ int ComboVertical::GetLargeur()
 
 string ComboVertical::GetTexteBrut()
 {
-	return texte_;
+	return texteBrut_;
 }
+
 
 
 string ComboVertical::CoucheMillieu(int longueur)

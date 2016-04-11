@@ -6,7 +6,7 @@
 class ComboVertical : public icombo
 {
 	int Largeur_;
-	string texte_;
+	string texteBrut_;
 	Boite a_, b_;
 public:
 	ComboVertical();

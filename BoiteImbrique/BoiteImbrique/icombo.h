@@ -9,6 +9,7 @@ public:
 	icombo() {};
 	virtual string Emboiter() { return{}; };
 	virtual int GetLargeur() { return{}; };
+	virtual int GetPosMilieu() { return{}; };
 	virtual string GetTexteBrut() { return{}; };
 };
 #endif
